@@ -35,5 +35,5 @@ impl<T: ElemT> Ray<T> {
     }
     pub fn origin(&self) -> Vec3<T> { self.a.clone() }
     pub fn direction(&self) -> Vec3<T> { self.b.clone() }
-    pub fn point_at_parameter(&self, t: T) -> Vec3<T> { &(self.a) + &(&(self.b) * t) }
+    pub fn point_at_parameter(&self, t: T) -> Vec3<T> { &self.a + &self.b * t }
 }

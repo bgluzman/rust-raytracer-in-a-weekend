@@ -26,7 +26,7 @@ fn main() {
         for i in 0..nx {
             let u = i as f64 / nx as f64;
             let v = j as f64 / ny as f64;
-            let p = &lower_left_corner + &((&horizontal)*u) + &(&vertical*v);
+            let p = &lower_left_corner + &horizontal*u + &vertical*v;
             let r = Ray::new(&origin, &p);
             let col = color(r);
             let col_scaled = 255.99 * col;
