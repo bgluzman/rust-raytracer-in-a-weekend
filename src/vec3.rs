@@ -239,6 +239,33 @@ impl<T: ElemT> Sub for Vec3<T> {
     }
 }
 
+impl<'a, T: ElemT> Sub<Vec3<T>> for &'a Vec3<T> {
+    type Output = Vec3<T>;
+    fn sub(self, rhs: Vec3<T>) -> Vec3<T> {
+        Vec3::new(self.x() - rhs.x(),
+                  self.y() - rhs.y(),
+                  self.z() - rhs.z())
+    }
+}
+
+impl<'a, 'b, T: ElemT> Sub<&'b Vec3<T>> for &'a Vec3<T> {
+    type Output = Vec3<T>;
+    fn sub(self, rhs: &'b Vec3<T>) -> Vec3<T> {
+        Vec3::new(self.x() - rhs.x(),
+                  self.y() - rhs.y(),
+                  self.z() - rhs.z())
+    }
+}
+
+impl<'a, T: ElemT> Sub<&'a Vec3<T>> for Vec3<T> {
+    type Output = Vec3<T>;
+    fn sub(self, rhs: &'a Vec3<T>) -> Vec3<T> {
+        Vec3::new(self.x() - rhs.x(),
+                  self.y() - rhs.y(),
+                  self.z() - rhs.z())
+    }
+}
+
 impl<T: ElemT> Mul for Vec3<T> {
     type Output = Vec3<T>;
     fn mul(self, rhs: Vec3<T>) -> Vec3<T> {
