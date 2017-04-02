@@ -22,6 +22,7 @@ impl<T: Float
       + Display
       > ElemT for T {}
 
+#[derive(Clone)]
 #[derive(Debug)]
 pub struct Vec3<T: ElemT> {
     vec: [T; 3]
@@ -45,41 +46,41 @@ impl<T: ElemT> Vec3<T> {
     //     Some(Vec3::new(x, 0.0, 0.0))
     // }
 
-    fn from_vector(v: &Vec<T>) -> Vec3<T> {
+    pub fn from_vector(v: &Vec<T>) -> Vec3<T> {
         Vec3::new(v[0], v[1], v[2])
     }
 
-    fn x(&self) -> T { self.vec[X] }
-    fn y(&self) -> T { self.vec[Y] }
-    fn z(&self) -> T { self.vec[Z] }
+    pub fn x(&self) -> T { self.vec[X] }
+    pub fn y(&self) -> T { self.vec[Y] }
+    pub fn z(&self) -> T { self.vec[Z] }
     pub fn r(&self) -> T { self.vec[X] }
     pub fn g(&self) -> T { self.vec[Y] }
     pub fn b(&self) -> T { self.vec[Z] }
 
-    fn squared_length(&self) -> T {
+    pub fn squared_length(&self) -> T {
         self.x().powi(2) + self.y().powi(2) + self.z().powi(2)
     }
 
-    fn length(&self) -> T {
+    pub fn length(&self) -> T {
         self.squared_length().sqrt()
     }
 
-    fn dot(&self, rhs: &Vec3<T>) -> T {
+    pub fn dot(&self, rhs: &Vec3<T>) -> T {
         self.x() * rhs.x() + self.y() * rhs.y() + self.z() * rhs.z()
     }
 
-    fn cross(&self, rhs: &Vec3<T>) -> Vec3<T> {
+    pub fn cross(&self, rhs: &Vec3<T>) -> Vec3<T> {
         Vec3::<T>::new(self.y() * rhs.z() - self.z() * rhs.y(),
                     (-(self.x() * rhs.z() - self.z() * rhs.x())),
                        self.x() * rhs.y() - self.y() * rhs.x())
     }
 
-    fn unit_vector(&self) -> Vec3<T> {
+    pub fn unit_vector(&self) -> Vec3<T> {
         let vnew = Vec3::new(self.x(), self.y(), self.z());
         (vnew / self.length())
     }
 
-    fn make_unit_vector(&mut self) {
+    pub fn make_unit_vector(&mut self) {
         let len = self.length();
         self.vec[X] /= len;
         self.vec[Y] /= len;
@@ -193,19 +194,36 @@ impl<T: ElemT> DivAssign<T> for Vec3<T> {
 // Binary operations //
 ///////////////////////
 
-impl<T: ElemT> Add for Vec3<T> {
+impl<T: ElemT> Add<Vec3<T>> for Vec3<T> {
     type Output = Vec3<T>;
     fn add(self, rhs: Vec3<T>) -> Vec3<T> {
-        // Note that we can do this, but that requires us to create an
-        // intermediate Vec<f64>:
-        //     let v = self.vec
-        //                 .into_iter()
-        //                 .map(ToOwned::to_owned)
-        //                 .zip(other.vec.into_iter())
-        //                 .map(|(x, y)| x + y)
-        //                 .collect();
-        //     Vec3::from_vector(&v)
+        Vec3::new(self.x() + rhs.x(),
+                  self.y() + rhs.y(),
+                  self.z() + rhs.z())
+    }
+}
 
+impl<'a, T: ElemT> Add<Vec3<T>> for &'a Vec3<T> {
+    type Output = Vec3<T>;
+    fn add(self, rhs: Vec3<T>) -> Vec3<T> {
+        Vec3::new(self.x() + rhs.x(),
+                  self.y() + rhs.y(),
+                  self.z() + rhs.z())
+    }
+}
+
+impl<'a, T: ElemT> Add<&'a Vec3<T>> for Vec3<T> {
+    type Output = Vec3<T>;
+    fn add(self, rhs: &'a Vec3<T>) -> Vec3<T> {
+        Vec3::new(self.x() + rhs.x(),
+                  self.y() + rhs.y(),
+                  self.z() + rhs.z())
+    }
+}
+
+impl<'a, 'b, T: ElemT> Add<&'b Vec3<T>> for &'a Vec3<T> {
+    type Output = Vec3<T>;
+    fn add(self, rhs: &'b Vec3<T>) -> Vec3<T> {
         Vec3::new(self.x() + rhs.x(),
                   self.y() + rhs.y(),
                   self.z() + rhs.z())
@@ -248,7 +266,25 @@ impl<T: ElemT> Mul<T> for Vec3<T> {
     }
 }
 
+impl<'a, T: ElemT> Mul<T> for &'a Vec3<T> {
+    type Output = Vec3<T>;
+    fn mul(self, rhs: T) -> Vec3<T> {
+        Vec3::new(self.x() * rhs,
+                  self.y() * rhs,
+                  self.z() * rhs)
+    }
+}
+
 impl<T: ElemT> Div<T> for Vec3<T> {
+    type Output = Vec3<T>;
+    fn div(self, rhs: T) -> Vec3<T> {
+        Vec3::new(self.x() / rhs,
+                  self.y() / rhs,
+                  self.z() / rhs)
+    }
+}
+
+impl<'a, T: ElemT> Div<T> for &'a Vec3<T> {
     type Output = Vec3<T>;
     fn div(self, rhs: T) -> Vec3<T> {
         Vec3::new(self.x() / rhs,
