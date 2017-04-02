@@ -1,3 +1,10 @@
+#[allow(unused_imports)]
+#[macro_use]
+extern crate assert_approx_eq;
+
+mod vec3;
+use vec3::Vec3;
+
 fn main() {
 	let nx = 200;
 	let ny = 100;
@@ -5,13 +12,12 @@ fn main() {
     
     for j in (0..ny).rev() {
         for i in 0..nx {
-            let r: f32 = i as f32 / nx as f32;
-            let g: f32 = j as f32 / ny as f32;
-            let b: f32 = 0.2;
-            let ir = (255.99*r) as i32;
-            let ig = (255.99*g) as i32;
-            let ib = (255.99*b) as i32;
-            println!("{} {} {}", ir, ig, ib);
+            let col = Vec3::<f64>::new(i as f64 / nx as f64,
+                                       j as f64 / ny as f64,
+                                       0.2);
+            let col_scaled = 255.99 * col;
+            let (ir, ig, ib) = (col_scaled.r(), col_scaled.g(), col_scaled.b());
+            println!("{} {} {}", ir as i32, ig as i32, ib as i32);
         }
     }
 }
