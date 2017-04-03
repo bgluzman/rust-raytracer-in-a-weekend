@@ -1,7 +1,6 @@
 #![allow(dead_code)]
 
-extern crate num;
-use self::num::Float;
+use num::Float;
 
 use std::ops::*;
 use std::fmt;
@@ -33,6 +32,12 @@ const Y:usize = 1;
 const Z:usize = 2;
 
 impl<T: ElemT> Vec3<T> {
+    pub fn default() -> Vec3<T> {
+        Vec3 {
+            vec: [T::zero(), T::zero(), T::zero()]
+        }
+    }
+
     pub fn new(x: T, y: T, z: T) -> Vec3<T> {
         Vec3 {
             vec: [x, y, z]
@@ -248,18 +253,18 @@ impl<'a, T: ElemT> Sub<Vec3<T>> for &'a Vec3<T> {
     }
 }
 
-impl<'a, 'b, T: ElemT> Sub<&'b Vec3<T>> for &'a Vec3<T> {
+impl<'a, T: ElemT> Sub<&'a Vec3<T>> for Vec3<T> {
     type Output = Vec3<T>;
-    fn sub(self, rhs: &'b Vec3<T>) -> Vec3<T> {
+    fn sub(self, rhs: &'a Vec3<T>) -> Vec3<T> {
         Vec3::new(self.x() - rhs.x(),
                   self.y() - rhs.y(),
                   self.z() - rhs.z())
     }
 }
 
-impl<'a, T: ElemT> Sub<&'a Vec3<T>> for Vec3<T> {
+impl<'a, 'b, T: ElemT> Sub<&'b Vec3<T>> for &'a Vec3<T> {
     type Output = Vec3<T>;
-    fn sub(self, rhs: &'a Vec3<T>) -> Vec3<T> {
+    fn sub(self, rhs: &'b Vec3<T>) -> Vec3<T> {
         Vec3::new(self.x() - rhs.x(),
                   self.y() - rhs.y(),
                   self.z() - rhs.z())

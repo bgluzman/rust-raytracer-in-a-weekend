@@ -6,3 +6,4 @@ authors = ["brian"]
 [dependencies]
 assert_approx_eq = "1.0.0"
 num              = "0.1.37"
+num-traits       = "0.1.37"

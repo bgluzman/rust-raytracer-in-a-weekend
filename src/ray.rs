@@ -8,29 +8,18 @@ pub struct Ray<T: ElemT> {
     b: Vec3<T>
 }
 
-impl Ray<f32> {
-    pub fn default() -> Ray<f32> {
-        Ray::<f32> {
-            a: Vec3::<f32>::new(0.0, 0.0, 0.0),
-            b: Vec3::<f32>::new(0.0, 0.0, 0.0)
-        }
-    }
-}
-
-impl Ray<f64> {
-    pub fn default() -> Ray<f64> {
-        Ray::<f64> {
-            a: Vec3::<f64>::new(0.0, 0.0, 0.0),
-            b: Vec3::<f64>::new(0.0, 0.0, 0.0)
-        }
-    }
-}
-
 impl<T: ElemT> Ray<T> {
-    pub fn new(a: &Vec3<T>, b: &Vec3<T>) -> Ray<T> {
+    pub fn default() -> Ray<T> {
         Ray::<T> {
-            a: a.clone(),
-            b: b.clone()
+            a: Vec3::<T>::default(),
+            b: Vec3::<T>::default()
+        }
+    }
+
+    pub fn new(a: Vec3<T>, b: Vec3<T>) -> Ray<T> {
+        Ray::<T> {
+            a: a,
+            b: b
         }
     }
     pub fn origin(&self) -> Vec3<T> { self.a.clone() }
