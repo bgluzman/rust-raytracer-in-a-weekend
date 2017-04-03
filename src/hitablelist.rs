@@ -1,4 +1,4 @@
-use vec3::{ElemT, Vec3};
+use vec3::ElemT;
 use ray::Ray;
 use hitable::{HitRecord, Hitable};
 
@@ -8,6 +8,7 @@ pub struct HitableList<T: ElemT> {
 }
 
 impl<T: ElemT> HitableList<T> {
+    #[allow(dead_code)]
     pub fn default() -> HitableList<T> {
         HitableList::<T> {
             list: ListT::<T>::new()

@@ -11,7 +11,6 @@ mod sphere;
 mod hitablelist;
 
 use std::f64;
-use vec3::unit_vector;
 
 type Vec3 = vec3::Vec3<f64>;
 type Ray = ray::Ray<f64>;
@@ -22,7 +21,7 @@ type HitableList = hitablelist::HitableList<f64>;
 
 fn color(r: &Ray, world: &Hitable) -> Vec3 {
     let mut rec = HitRecord::new();
-    if (*world).hit(&r, 0.0, f64::MAX, &mut rec) {
+    if world.hit(&r, 0.0, f64::MAX, &mut rec) {
         0.5 * Vec3::new(rec.normal.x()+1., rec.normal.y()+1., rec.normal.z()+1.)
     }
     else {
@@ -56,7 +55,6 @@ fn main() {
             let r = Ray::new(origin.clone(),
                              &lower_left_corner + &horizontal*u + &vertical*v);
 
-            let p = r.point_at_parameter(2.);
             let col = color(&r, &world);
             let col_scaled = 255.99 * col;
             let (ir, ig, ib) = (col_scaled.r(), col_scaled.g(), col_scaled.b());
