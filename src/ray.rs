@@ -9,13 +9,6 @@ pub struct Ray<T: ElemT> {
 }
 
 impl<T: ElemT> Ray<T> {
-    pub fn default() -> Ray<T> {
-        Ray::<T> {
-            a: Vec3::<T>::default(),
-            b: Vec3::<T>::default()
-        }
-    }
-
     pub fn new(a: Vec3<T>, b: Vec3<T>) -> Ray<T> {
         Ray::<T> {
             a: a,
@@ -25,4 +18,13 @@ impl<T: ElemT> Ray<T> {
     pub fn origin(&self) -> Vec3<T> { self.a.clone() }
     pub fn direction(&self) -> Vec3<T> { self.b.clone() }
     pub fn point_at_parameter(&self, t: T) -> Vec3<T> { &self.a + &self.b * t }
+}
+
+impl<T: ElemT> Default for Ray<T> {
+    fn default() -> Ray<T> {
+        Ray::<T> {
+            a: Vec3::<T>::default(),
+            b: Vec3::<T>::default()
+        }
+    }
 }

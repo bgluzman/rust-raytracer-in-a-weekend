@@ -32,12 +32,6 @@ const Y:usize = 1;
 const Z:usize = 2;
 
 impl<T: ElemT> Vec3<T> {
-    pub fn default() -> Vec3<T> {
-        Vec3 {
-            vec: [T::zero(), T::zero(), T::zero()]
-        }
-    }
-
     pub fn new(x: T, y: T, z: T) -> Vec3<T> {
         Vec3 {
             vec: [x, y, z]
@@ -90,6 +84,14 @@ impl<T: ElemT> Vec3<T> {
         self.vec[X] /= len;
         self.vec[Y] /= len;
         self.vec[Z] /= len;
+    }
+}
+
+impl<T: ElemT> Default for Vec3<T> {
+    fn default() -> Vec3<T> {
+        Vec3 {
+            vec: [T::zero(), T::zero(), T::zero()]
+        }
     }
 }
 

@@ -9,3 +9,6 @@ target
 
 # vim
 .*.swp
+
+# images
+*.ppm

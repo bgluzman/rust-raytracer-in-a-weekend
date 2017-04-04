@@ -8,18 +8,20 @@ pub struct Sphere<T: ElemT> {
 }
 
 impl<T: ElemT> Sphere<T> {
-    #[allow(dead_code)]
-    pub fn default() -> Sphere<T> {
-        Sphere {
-            center: Vec3::new(T::zero(), T::zero(), T::zero()),
-            radius: T::zero()
-        }
-    }
-
     pub fn new(cen: Vec3<T>, r: T) -> Sphere<T> {
         Sphere {
             center: cen,
             radius: r
+        }
+    }
+}
+
+impl<T: ElemT> Default for Sphere<T> {
+    #[allow(dead_code)]
+    fn default() -> Sphere<T> {
+        Sphere {
+            center: Vec3::new(T::zero(), T::zero(), T::zero()),
+            radius: T::zero()
         }
     }
 }

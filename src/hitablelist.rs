@@ -8,16 +8,18 @@ pub struct HitableList<T: ElemT> {
 }
 
 impl<T: ElemT> HitableList<T> {
-    #[allow(dead_code)]
-    pub fn default() -> HitableList<T> {
-        HitableList::<T> {
-            list: ListT::<T>::new()
-        }
-    }
-
     pub fn new(v: Vec<Box<Hitable<T>>>) -> HitableList<T> {
         HitableList::<T> {
             list: v
+        }
+    }
+}
+
+impl<T: ElemT> Default for HitableList<T> {
+    #[allow(dead_code)]
+    fn default() -> HitableList<T> {
+        HitableList::<T> {
+            list: ListT::<T>::new()
         }
     }
 }
