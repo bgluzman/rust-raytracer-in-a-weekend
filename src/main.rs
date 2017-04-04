@@ -3,14 +3,18 @@
 extern crate assert_approx_eq;
 extern crate num;
 extern crate num_traits;
+extern crate rand;
 
 mod vec3;
 mod ray;
 mod hitable;
 mod sphere;
 mod hitablelist;
+mod camera;
 
 use std::f64;
+use rand::Rng;
+use camera::Camera;
 
 type Vec3 = vec3::Vec3<f64>;
 type Ray = ray::Ray<f64>;
@@ -34,13 +38,9 @@ fn color(r: &Ray, world: &Hitable) -> Vec3 {
 fn main() {
 	let nx = 200;
 	let ny = 100;
+    let ns = 100;
 
     println!("P3\n {} {} \n255", nx, ny);
-
-    let lower_left_corner = Vec3::new(-2.0, -1.0, -1.0);
-    let horizontal = Vec3::new(4.0, 0.0, 0.0);
-    let vertical   = Vec3::new(0.0, 2.0, 0.0);
-    let origin     = Vec3::default();
 
     let list: Vec<Box<Hitable>> = vec![
         Box::new(Sphere::new(Vec3::new(0., 0., -1.), 0.5)),
@@ -48,18 +48,23 @@ fn main() {
     ];
     let world = HitableList::new(list);
 
+    let cam = Camera::new();
+
+    let mut rng = rand::thread_rng();
     for j in (0..ny).rev() {
         for i in 0..nx {
-            let u = i as f64 / nx as f64;
-            let v = j as f64 / ny as f64;
-            let r = Ray::new(origin.clone(),
-                             &lower_left_corner + &horizontal*u + &vertical*v);
-
-            let col = color(&r, &world);
-            let col_scaled = 255.99 * col;
-            let (ir, ig, ib) = (col_scaled.r(), col_scaled.g(), col_scaled.b());
-
-            println!("{} {} {}", ir as i32, ig as i32, ib as i32);
+            let mut col = Vec3::default();
+            for _ in 0..ns {
+                let u = (i as f64 + rng.next_f64()) / (nx as f64);
+                let v = (j as f64 + rng.next_f64()) / (ny as f64);
+                let r = cam.get_ray(u, v);
+                col += color(&r, &world);
+            }
+            col /= ns as f64;
+            let (ir, ig, ib) = ((255.99*col.x()) as i32,
+                                (255.99*col.y()) as i32,
+                                (255.99*col.z()) as i32);
+            println!("{} {} {}", ir, ig, ib);
         }
     }
 }
