@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 
 use num::Float;
+use num::FromPrimitive;
 
 use std::ops::*;
 use std::fmt;
@@ -8,12 +9,14 @@ use std::fmt::Display;
 
 // Alias ElemT
 pub trait ElemT : Float
+                + FromPrimitive
                 + AddAssign
                 + SubAssign
                 + MulAssign
                 + DivAssign
                 + Display {}
 impl<T: Float
+      + FromPrimitive
       + AddAssign
       + SubAssign
       + MulAssign
@@ -276,6 +279,17 @@ impl<'a, 'b, T: ElemT> Sub<&'b Vec3<T>> for &'a Vec3<T> {
 impl<T: ElemT> Mul for Vec3<T> {
     type Output = Vec3<T>;
     fn mul(self, rhs: Vec3<T>) -> Vec3<T> {
+        Vec3::new(self.x() * rhs.x(),
+                  self.y() * rhs.y(),
+                  self.z() * rhs.z())
+    }
+}
+
+// TODO: other Mul's
+
+impl<'a, 'b, T: ElemT> Mul<&'b Vec3<T>> for &'a Vec3<T> {
+    type Output = Vec3<T>;
+    fn mul(self, rhs: &'b Vec3<T>) -> Vec3<T> {
         Vec3::new(self.x() * rhs.x(),
                   self.y() * rhs.y(),
                   self.z() * rhs.z())

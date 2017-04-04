@@ -1,12 +1,13 @@
-use vec3::ElemT;
-use vec3::Vec3;
+use vec3::{ElemT, Vec3};
 use ray::Ray;
+use material::Material;
 
 #[derive(Clone)]
 pub struct HitRecord<T: ElemT> {
     pub t: T,
     pub p: Vec3<T>,
-    pub normal: Vec3<T>
+    pub normal: Vec3<T>,
+    pub mat: Option<Box<Material<T>>>
 }
 
 impl<T: ElemT> HitRecord<T> {
@@ -14,7 +15,8 @@ impl<T: ElemT> HitRecord<T> {
         HitRecord::<T> {
             t: T::zero(),
             p: Vec3::<T>::new(T::zero(), T::zero(), T::zero()),
-            normal: Vec3::<T>::new(T::zero(), T::zero(), T::zero())
+            normal: Vec3::<T>::new(T::zero(), T::zero(), T::zero()),
+            mat: None
         }
     }
 }

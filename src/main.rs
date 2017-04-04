@@ -11,6 +11,9 @@ mod hitable;
 mod sphere;
 mod hitablelist;
 mod camera;
+mod material;
+mod lambertian;
+mod metal;
 
 use std::f64;
 use rand::Rng;
