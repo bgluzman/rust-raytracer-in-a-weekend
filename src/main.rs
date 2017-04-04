@@ -23,10 +23,24 @@ type Hitable = hitable::Hitable<f64>;
 type HitRecord = hitable::HitRecord<f64>;
 type HitableList = hitablelist::HitableList<f64>;
 
+fn random_in_unit_sphere() -> Vec3 {
+    let mut rng = rand::thread_rng();
+
+    let mut p;
+    loop {
+        p = 2.0*Vec3::new(rng.next_f64(), rng.next_f64(), rng.next_f64())
+                - Vec3::new(1., 1., 1.);
+        if p.squared_length() >= 1. { break; }
+    }
+    p
+}
+
 fn color(r: &Ray, world: &Hitable) -> Vec3 {
     let mut rec = HitRecord::new();
-    if world.hit(&r, 0.0, f64::MAX, &mut rec) {
-        0.5 * Vec3::new(rec.normal.x()+1., rec.normal.y()+1., rec.normal.z()+1.)
+    if world.hit(&r, 0.001, f64::MAX, &mut rec) {
+        // 0.5 * Vec3::new(rec.normal.x()+1., rec.normal.y()+1., rec.normal.z()+1.)
+        let target = &rec.p + &rec.normal + &random_in_unit_sphere();
+        0.5*color(&Ray::new(rec.p.clone(), &target-&rec.p), world)
     }
     else {
         let unit_direction = r.direction().unit_vector();
@@ -61,6 +75,7 @@ fn main() {
                 col += color(&r, &world);
             }
             col /= ns as f64;
+            col = Vec3::new(col.x().sqrt(), col.y().sqrt(), col.z().sqrt());
             let (ir, ig, ib) = ((255.99*col.x()) as i32,
                                 (255.99*col.y()) as i32,
                                 (255.99*col.z()) as i32);
