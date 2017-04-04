@@ -26,7 +26,7 @@ impl<T: ElemT> Default for HitableList<T> {
 
 impl<T: ElemT> Hitable<T> for HitableList<T> {
     fn hit(&self, r: &Ray<T>, t_min: T, t_max: T, rec: &mut HitRecord<T>) -> bool {
-        let mut temp_rec = HitRecord::<T>::new();
+        let mut temp_rec = HitRecord::<T>::default();
         let mut hit_anything = false;
         let mut closest_so_far = t_max;
         for ref h in &self.list {

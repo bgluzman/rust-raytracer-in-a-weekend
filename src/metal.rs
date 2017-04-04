@@ -5,8 +5,6 @@ use ray::Ray;
 use hitable::HitRecord;
 use material::Material;
 
-use rand::Rng;
-
 #[derive(Clone)]
 struct Metal<T: ElemT> {
     albedo: Vec3<T>

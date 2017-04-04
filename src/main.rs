@@ -23,7 +23,7 @@ type Vec3 = vec3::Vec3<f64>;
 type Ray = ray::Ray<f64>;
 type Sphere = sphere::Sphere<f64>;
 type Hitable = hitable::Hitable<f64>;
-type HitRecord = hitable::HitRecord<f64>;
+type HitRecord = hitable::HitRecord<'static, f64>;
 type HitableList = hitablelist::HitableList<f64>;
 
 fn random_in_unit_sphere() -> Vec3 {
@@ -39,7 +39,7 @@ fn random_in_unit_sphere() -> Vec3 {
 }
 
 fn color(r: &Ray, world: &Hitable) -> Vec3 {
-    let mut rec = HitRecord::new();
+    let mut rec = HitRecord::default();
     if world.hit(&r, 0.001, f64::MAX, &mut rec) {
         // 0.5 * Vec3::new(rec.normal.x()+1., rec.normal.y()+1., rec.normal.z()+1.)
         let target = &rec.p + &rec.normal + &random_in_unit_sphere();
