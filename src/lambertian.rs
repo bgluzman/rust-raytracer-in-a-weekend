@@ -39,14 +39,8 @@ fn random_in_unit_sphere<T: ElemT>() -> Vec3<T> {
 
 impl<T: ElemT> Material<T> for Lambertian<T> {
     #[allow(unused_variables)]
-    fn scatter(&self,
-               r_in: &Ray<T>,
-               rec: &HitRecord<T>,
-               attenuation: &mut Vec3<T>,
-               scattered: &mut Ray<T>) -> bool {
+    fn scatter(&self, r_in: &Ray<T>, rec: &HitRecord<T>) -> Option<(Vec3<T>, Ray<T>)> {
         let target = &rec.p + &rec.normal + &random_in_unit_sphere();
-        *scattered = Ray::new(rec.p.clone(), &target-&rec.p);
-        *attenuation = self.albedo.clone();
-        true
+        Some((self.albedo.clone(), Ray::new(rec.p.clone(), &target-&rec.p)))
     }
 }

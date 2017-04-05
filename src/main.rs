@@ -30,9 +30,11 @@ type Metal = metal::Metal<f64>;
 
 fn color(r: &Ray, world: &Hitable, depth: i32) -> Vec3 {
     if let Some(rec) = world.hit(&r, 0.001, f64::MAX) {
-        let mut scattered = Ray::default();
-        let mut attenuated = Vec3::default();
-        if depth < 50 && rec.clone().mat_opt.unwrap().scatter(r, &rec, &mut attenuated, &mut scattered) {
+        if depth >= 50 { // stop recursion
+            return Vec3::new(0., 0., 0.);
+        }
+
+        if let Some((attenuated, scattered)) = rec.clone().mat_opt.unwrap().scatter(r, &rec) {
             attenuated * color(&scattered, world, depth+1)
         }
         else {
