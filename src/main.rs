@@ -14,6 +14,7 @@ mod camera;
 mod material;
 mod lambertian;
 mod metal;
+mod dielectric;
 
 use std::f64;
 use rand::Rng;
@@ -27,6 +28,7 @@ type Hitable = hitable::Hitable<f64>;
 type HitableList = hitablelist::HitableList<f64>;
 type Lambertian = lambertian::Lambertian<f64>;
 type Metal = metal::Metal<f64>;
+type Dielectric = dielectric::Dielectric<f64>;
 
 fn color(r: &Ray, world: &Hitable, depth: i32) -> Vec3 {
     if let Some(rec) = world.hit(&r, 0.001, f64::MAX) {
@@ -56,10 +58,10 @@ fn main() {
     println!("P3\n {} {} \n255", nx, ny);
 
     let list: Vec<Box<Hitable>> = vec![
-        Box::new(Sphere::new(Vec3::new(0., 0., -1.), 0.5, Box::new(Lambertian::new(Vec3::new(0.8, 0.3, 0.3))))),
+        Box::new(Sphere::new(Vec3::new(0., 0., -1.), 0.5, Box::new(Lambertian::new(Vec3::new(0.1, 0.2, 0.5))))),
         Box::new(Sphere::new(Vec3::new(0., -100.5, -1.), 100., Box::new(Lambertian::new(Vec3::new(0.8, 0.8, 0.0))))),
-        Box::new(Sphere::new(Vec3::new(1., 0., -1.), 0.5, Box::new(Metal::new(Vec3::new(0.8, 0.6, 0.2), 1.)))),
-        Box::new(Sphere::new(Vec3::new(-1., 0., -1.), 0.5, Box::new(Metal::new(Vec3::new(0.8, 0.8, 0.8), 0.3))))
+        Box::new(Sphere::new(Vec3::new(1., 0., -1.), 0.5, Box::new(Metal::new(Vec3::new(0.8, 0.6, 0.2), 0.)))),
+        Box::new(Sphere::new(Vec3::new(-1., 0., -1.), -0.45, Box::new(Dielectric::new(1.5))))
     ];
     let world = HitableList::new(list);
 

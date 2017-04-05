@@ -3,6 +3,8 @@ use ray::Ray;
 use hitable::{HitRecord, Hitable};
 
 type ListT<T> = Vec<Box<Hitable<T>>>;
+
+#[derive(Default)]
 pub struct HitableList<T>
     where T: ElemT {
     list : ListT<T>
@@ -12,14 +14,6 @@ impl<T: ElemT> HitableList<T> {
     pub fn new(v: Vec<Box<Hitable<T>>>) -> HitableList<T> {
         HitableList::<T> {
             list: v
-        }
-    }
-}
-
-impl<T: ElemT> Default for HitableList<T> {
-    fn default() -> HitableList<T> {
-        HitableList::<T> {
-            list: ListT::<T>::new()
         }
     }
 }

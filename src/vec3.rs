@@ -9,6 +9,7 @@ use std::fmt::Display;
 
 // Alias ElemT
 pub trait ElemT : Float
+                + Default
                 + FromPrimitive
                 + AddAssign
                 + SubAssign
@@ -16,6 +17,7 @@ pub trait ElemT : Float
                 + DivAssign
                 + Display {}
 impl<T: Float
+      + Default
       + FromPrimitive
       + AddAssign
       + SubAssign
@@ -26,6 +28,7 @@ impl<T: Float
 
 #[derive(Clone)]
 #[derive(Debug)]
+#[derive(Default)]
 pub struct Vec3<T: ElemT> {
     vec: [T; 3]
 }
@@ -87,14 +90,6 @@ impl<T: ElemT> Vec3<T> {
         self.vec[X] /= len;
         self.vec[Y] /= len;
         self.vec[Z] /= len;
-    }
-}
-
-impl<T: ElemT> Default for Vec3<T> {
-    fn default() -> Vec3<T> {
-        Vec3 {
-            vec: [T::zero(), T::zero(), T::zero()]
-        }
     }
 }
 
