@@ -23,6 +23,7 @@ impl<'a, T> Default for HitRecord<'a, T>
     }
 }
 
-pub trait Hitable<T: ElemT> {
-    fn hit(&self, r: &Ray<T>, t_min: T, t_max: T, rec: &mut HitRecord<T>) -> bool;
+pub trait Hitable<'a, T>
+    where T: ElemT + 'a {
+    fn hit(&'a self, r: &Ray<T>, t_min: T, t_max: T) -> Option<HitRecord<'a, T>>;
 }
