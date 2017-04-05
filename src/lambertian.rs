@@ -8,14 +8,14 @@ use material::Material;
 use rand::Rng;
 
 #[derive(Clone)]
-struct Lambertian<T: ElemT> {
+pub struct Lambertian<T: ElemT> {
     albedo: Vec3<T>
 }
 
 impl<T: ElemT> Lambertian<T> {
-    pub fn new(a: &Vec3<T>) -> Lambertian<T> {
+    pub fn new(a: Vec3<T>) -> Lambertian<T> {
         Lambertian::<T> {
-            albedo: a.clone()
+            albedo: a
         }
     }
 }

@@ -16,7 +16,6 @@ impl<T: ElemT> HitableList<T> {
 }
 
 impl<T: ElemT> Default for HitableList<T> {
-    #[allow(dead_code)]
     fn default() -> HitableList<T> {
         HitableList::<T> {
             list: ListT::<T>::new()

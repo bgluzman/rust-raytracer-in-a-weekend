@@ -6,14 +6,14 @@ use hitable::HitRecord;
 use material::Material;
 
 #[derive(Clone)]
-struct Metal<T: ElemT> {
+pub struct Metal<T: ElemT> {
     albedo: Vec3<T>
 }
 
 impl<T: ElemT> Metal<T> {
-    pub fn new(a: &Vec3<T>) -> Metal<T> {
+    pub fn new(a: Vec3<T>) -> Metal<T> {
         Metal::<T> {
-            albedo: a.clone()
+            albedo: a
         }
     }
 }

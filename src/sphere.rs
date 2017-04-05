@@ -1,28 +1,25 @@
 use vec3::{ElemT, Vec3};
 use ray::Ray;
 use hitable::{HitRecord, Hitable};
+use material::Material;
 
 pub struct Sphere<T: ElemT> {
     center: Vec3<T>,
-    radius: T
+    radius: T,
+    material: Box<Material<T>>
 }
 
 impl<T: ElemT> Sphere<T> {
-    pub fn new(cen: Vec3<T>, r: T) -> Sphere<T> {
+    pub fn new(cen: Vec3<T>, r: T, mat: Box<Material<T>>) -> Sphere<T> {
         Sphere {
             center: cen,
-            radius: r
+            radius: r,
+            material: mat
         }
     }
-}
 
-impl<T: ElemT> Default for Sphere<T> {
-    #[allow(dead_code)]
-    fn default() -> Sphere<T> {
-        Sphere {
-            center: Vec3::new(T::zero(), T::zero(), T::zero()),
-            radius: T::zero()
-        }
+    fn material(&self) -> &Box<Material<T>> {
+        &self.material
     }
 }
 
