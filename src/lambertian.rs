@@ -37,7 +37,7 @@ fn random_in_unit_sphere<T: ElemT>() -> Vec3<T> {
     p
 }
 
-impl<T: ElemT + 'static> Material<T> for Lambertian<T> {
+impl<T: ElemT> Material<T> for Lambertian<T> {
     #[allow(unused_variables)]
     fn scatter(&self,
                r_in: &Ray<T>,

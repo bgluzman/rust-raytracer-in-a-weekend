@@ -3,14 +3,16 @@ use ray::Ray;
 use hitable::{HitRecord, Hitable};
 use material::Material;
 
+use std::rc::Rc;
+
 pub struct Sphere<T: ElemT> {
     center: Vec3<T>,
     radius: T,
-    material: Box<Material<T>>
+    material: Rc<Material<T>>
 }
 
 impl<T: ElemT> Sphere<T> {
-    pub fn new(cen: Vec3<T>, r: T, mat: Box<Material<T>>) -> Sphere<T> {
+    pub fn new(cen: Vec3<T>, r: T, mat: Rc<Material<T>>) -> Sphere<T> {
         Sphere {
             center: cen,
             radius: r,
@@ -18,8 +20,8 @@ impl<T: ElemT> Sphere<T> {
         }
     }
 
-    fn material(&self) -> &Box<Material<T>> {
-        &self.material
+    fn material(&self) -> Rc<Material<T>> {
+        self.material.clone()
     }
 }
 
@@ -36,6 +38,7 @@ impl<T: ElemT> Hitable<T> for Sphere<T> {
                 rec.t = temp;
                 rec.p = r.point_at_parameter(rec.t);
                 rec.normal = &(&rec.p - &self.center) / self.radius;
+                rec.mat_ptr = Some(self.material.clone());
                 return true;
             }
             temp = (-b + (b*b - a*c).sqrt())/a;
@@ -43,6 +46,7 @@ impl<T: ElemT> Hitable<T> for Sphere<T> {
                 rec.t = temp;
                 rec.p = r.point_at_parameter(rec.t);
                 rec.normal = &(&rec.p - &self.center) / self.radius;
+                rec.mat_ptr = Some(self.material.clone());
                 return true;
             }
         }

@@ -23,7 +23,7 @@ fn reflect<T: ElemT>(v: &Vec3<T>, n: &Vec3<T>) -> Vec3<T> {
     v - n*(v.dot(n)*two)
 }
 
-impl<T: ElemT + 'static> Material<T> for Metal<T> {
+impl<T: ElemT> Material<T> for Metal<T> {
     #[allow(unused_variables)]
     fn scatter(&self,
                r_in: &Ray<T>,
