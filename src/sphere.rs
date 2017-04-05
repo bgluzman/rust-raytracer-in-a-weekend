@@ -23,8 +23,8 @@ impl<T: ElemT> Sphere<T> {
     }
 }
 
-impl<'a, T: 'a + ElemT> Hitable<'a, T> for Sphere<T> {
-    fn hit(&'a self, r: &Ray<T>, t_min: T, t_max: T) -> Option<HitRecord<'a, T>>
+impl<T: ElemT> Hitable<T> for Sphere<T> {
+    fn hit(&self, r: &Ray<T>, t_min: T, t_max: T) -> Option<HitRecord<T>>
 {
         let oc = r.origin() - &self.center;
         let a = r.direction().dot(&r.direction());

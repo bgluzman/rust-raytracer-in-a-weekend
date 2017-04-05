@@ -2,13 +2,13 @@ use vec3::ElemT;
 use ray::Ray;
 use hitable::{HitRecord, Hitable};
 
-type ListT<'a, T> = Vec<Box<Hitable<'a, T>>>;
-pub struct HitableList<'a, T>
-    where T: ElemT + 'a {
-    list : ListT<'a, T>
+type ListT<T> = Vec<Box<Hitable<T>>>;
+pub struct HitableList<T>
+    where T: ElemT {
+    list : ListT<T>
 }
 
-impl<'a, T:'a + ElemT> HitableList<'a, T> {
+impl<T: ElemT> HitableList<T> {
     pub fn new(v: Vec<Box<Hitable<T>>>) -> HitableList<T> {
         HitableList::<T> {
             list: v
@@ -16,16 +16,16 @@ impl<'a, T:'a + ElemT> HitableList<'a, T> {
     }
 }
 
-impl<'a, T:'a + ElemT> Default for HitableList<'a, T> {
-    fn default() -> HitableList<'a, T> {
+impl<T: ElemT> Default for HitableList<T> {
+    fn default() -> HitableList<T> {
         HitableList::<T> {
             list: ListT::<T>::new()
         }
     }
 }
 
-impl<'a, T: ElemT> Hitable<'a, T> for HitableList<'a, T> {
-    fn hit(&'a self, r: &Ray<T>, t_min: T, t_max: T) -> Option<HitRecord<'a, T>> {
+impl<T: ElemT> Hitable<T> for HitableList<T> {
+    fn hit(&self, r: &Ray<T>, t_min: T, t_max: T) -> Option<HitRecord<T>> {
         let mut ret: Option<HitRecord<T>> = None;
         let mut closest_so_far = t_max;
         for ref h in &self.list {

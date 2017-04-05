@@ -22,9 +22,9 @@ use camera::Camera;
 type Vec3 = vec3::Vec3<f64>;
 type Ray = ray::Ray<f64>;
 type Sphere = sphere::Sphere<f64>;
-type Hitable<'a> = hitable::Hitable<'a, f64>;
+type Hitable = hitable::Hitable<f64>;
 type HitRecord<'a> = hitable::HitRecord<'a, f64>;
-type HitableList<'a> = hitablelist::HitableList<'a, f64>;
+type HitableList = hitablelist::HitableList<f64>;
 type Lambertian = lambertian::Lambertian<f64>;
 type Metal = metal::Metal<f64>;
 
