@@ -61,6 +61,7 @@ fn main() {
         Box::new(Sphere::new(Vec3::new(0., 0., -1.), 0.5, Box::new(Lambertian::new(Vec3::new(0.1, 0.2, 0.5))))),
         Box::new(Sphere::new(Vec3::new(0., -100.5, -1.), 100., Box::new(Lambertian::new(Vec3::new(0.8, 0.8, 0.0))))),
         Box::new(Sphere::new(Vec3::new(1., 0., -1.), 0.5, Box::new(Metal::new(Vec3::new(0.8, 0.6, 0.2), 0.)))),
+        Box::new(Sphere::new(Vec3::new(-1., 0., -1.), 0.5, Box::new(Dielectric::new(1.5)))),
         Box::new(Sphere::new(Vec3::new(-1., 0., -1.), -0.45, Box::new(Dielectric::new(1.5))))
     ];
     let world = HitableList::new(list);
