@@ -3,22 +3,18 @@ use ray::Ray;
 use material::Material;
 
 #[derive(Clone)]
-pub struct HitRecord<'a, T>
-    where T: ElemT + 'a {
+pub struct HitRecord<T: ElemT> {
     pub t: T,
     pub p: Vec3<T>,
-    pub normal: Vec3<T>,
-    pub mat: Option<&'a Material<T>>
+    pub normal: Vec3<T>
 }
 
-impl<'a, T> Default for HitRecord<'a, T>
-    where T: ElemT + 'a {
-    fn default() -> HitRecord<'a, T> {
+impl<T: ElemT> Default for HitRecord<T> {
+    fn default() -> HitRecord<T> {
         HitRecord::<T> {
             t: T::zero(),
             p: Vec3::<T>::new(T::zero(), T::zero(), T::zero()),
-            normal: Vec3::<T>::new(T::zero(), T::zero(), T::zero()),
-            mat: None
+            normal: Vec3::<T>::new(T::zero(), T::zero(), T::zero())
         }
     }
 }
