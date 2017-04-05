@@ -3,7 +3,8 @@ use ray::Ray;
 use hitable::{HitRecord, Hitable};
 
 type ListT<T> = Vec<Box<Hitable<T>>>;
-pub struct HitableList<T: ElemT> {
+pub struct HitableList<T>
+    where T: ElemT {
     list : ListT<T>
 }
 
@@ -24,17 +25,15 @@ impl<T: ElemT> Default for HitableList<T> {
 }
 
 impl<T: ElemT> Hitable<T> for HitableList<T> {
-    fn hit(&self, r: &Ray<T>, t_min: T, t_max: T, rec: &mut HitRecord<T>) -> bool {
-        let mut temp_rec = HitRecord::<T>::default();
-        let mut hit_anything = false;
+    fn hit(&self, r: &Ray<T>, t_min: T, t_max: T) -> Option<HitRecord<T>> {
+        let mut ret: Option<HitRecord<T>> = None;
         let mut closest_so_far = t_max;
         for ref h in &self.list {
-            if (*h).hit(&r, t_min, closest_so_far, &mut temp_rec) {
-                hit_anything = true;
-                closest_so_far = temp_rec.t;
-                rec.clone_from(&temp_rec);
+            if let Some(rec) = (*h).hit(&r, t_min, closest_so_far) {
+                closest_so_far = rec.t;
+                ret = Some(rec);
             }
         }
-        hit_anything
+        ret
     }
 }

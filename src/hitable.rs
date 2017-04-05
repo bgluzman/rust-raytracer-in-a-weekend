@@ -2,27 +2,26 @@ use vec3::{ElemT, Vec3};
 use ray::Ray;
 use material::Material;
 
-use std::rc::Rc;
-
 #[derive(Clone)]
-pub struct HitRecord<T: ElemT> {
+pub struct HitRecord<'a, T: ElemT + 'a> {
     pub t: T,
     pub p: Vec3<T>,
     pub normal: Vec3<T>,
-    pub mat_ptr: Option<Rc<Material<T>>>
+    pub mat_opt: Option<&'a Material<T>>
 }
 
-impl<T: ElemT> Default for HitRecord<T> {
-    fn default() -> HitRecord<T> {
-        HitRecord::<T> {
+impl<'a, T: ElemT + 'a> Default for HitRecord<'a, T> {
+    fn default() -> HitRecord<'a, T> {
+        HitRecord::<'a, T> {
             t: T::zero(),
             p: Vec3::<T>::new(T::zero(), T::zero(), T::zero()),
             normal: Vec3::<T>::new(T::zero(), T::zero(), T::zero()),
-            mat_ptr: None
+            mat_opt: None
         }
     }
 }
 
-pub trait Hitable<T: ElemT> {
-    fn hit(&self, r: &Ray<T>, t_min: T, t_max: T, rec: &mut HitRecord<T>) -> bool;
+pub trait Hitable<T>
+    where T: ElemT {
+    fn hit(&self, r: &Ray<T>, t_min: T, t_max: T) -> Option<HitRecord<T>>;
 }

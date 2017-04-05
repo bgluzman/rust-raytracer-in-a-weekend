@@ -16,7 +16,6 @@ mod lambertian;
 mod metal;
 
 use std::f64;
-use std::rc::Rc;
 use rand::Rng;
 
 use camera::Camera;
@@ -25,29 +24,15 @@ type Vec3 = vec3::Vec3<f64>;
 type Ray = ray::Ray<f64>;
 type Sphere = sphere::Sphere<f64>;
 type Hitable = hitable::Hitable<f64>;
-type HitRecord = hitable::HitRecord<f64>;
 type HitableList = hitablelist::HitableList<f64>;
 type Lambertian = lambertian::Lambertian<f64>;
 type Metal = metal::Metal<f64>;
 
-fn random_in_unit_sphere() -> Vec3 {
-    let mut rng = rand::thread_rng();
-
-    let mut p;
-    loop {
-        p = 2.0*Vec3::new(rng.next_f64(), rng.next_f64(), rng.next_f64())
-                - Vec3::new(1., 1., 1.);
-        if p.squared_length() >= 1. { break; }
-    }
-    p
-}
-
-fn color(r: &Ray, world: &Hitable, depth: i64) -> Vec3 {
-    let mut rec = HitRecord::default();
-    if world.hit(r, 0.001, f64::MAX, &mut rec) {
+fn color(r: &Ray, world: &Hitable, depth: i32) -> Vec3 {
+    if let Some(rec) = world.hit(&r, 0.001, f64::MAX) {
         let mut scattered = Ray::default();
         let mut attenuated = Vec3::default();
-        if depth < 50 && rec.clone().mat_ptr.unwrap().scatter(r, &rec, &mut attenuated, &mut scattered) {
+        if depth < 50 && rec.clone().mat_opt.unwrap().scatter(r, &rec, &mut attenuated, &mut scattered) {
             attenuated * color(&scattered, world, depth+1)
         }
         else {
@@ -69,10 +54,10 @@ fn main() {
     println!("P3\n {} {} \n255", nx, ny);
 
     let list: Vec<Box<Hitable>> = vec![
-        Box::new(Sphere::new(Vec3::new(0., 0., -1.), 0.5, Rc::new(Lambertian::new(Vec3::new(0.8, 0.3, 0.3))))),
-        Box::new(Sphere::new(Vec3::new(0., -100.5, -1.), 100., Rc::new(Lambertian::new(Vec3::new(0.8, 0.8, 0.0))))),
-        Box::new(Sphere::new(Vec3::new(1., 0., -1.), 0.5, Rc::new(Metal::new(Vec3::new(0.8, 0.6, 0.2))))),
-        Box::new(Sphere::new(Vec3::new(-1., 0., -1.), 0.5, Rc::new(Metal::new(Vec3::new(0.8, 0.8, 0.8)))))
+        Box::new(Sphere::new(Vec3::new(0., 0., -1.), 0.5, Box::new(Lambertian::new(Vec3::new(0.8, 0.3, 0.3))))),
+        Box::new(Sphere::new(Vec3::new(0., -100.5, -1.), 100., Box::new(Lambertian::new(Vec3::new(0.8, 0.8, 0.0))))),
+        Box::new(Sphere::new(Vec3::new(1., 0., -1.), 0.5, Box::new(Metal::new(Vec3::new(0.8, 0.6, 0.2))))),
+        Box::new(Sphere::new(Vec3::new(-1., 0., -1.), 0.5, Box::new(Metal::new(Vec3::new(0.8, 0.8, 0.8)))))
     ];
     let world = HitableList::new(list);
 
