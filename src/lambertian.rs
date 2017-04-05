@@ -21,7 +21,8 @@ impl<T: ElemT> Lambertian<T> {
 }
 
 // TODO: could we make the random number generator generic (f32, f64, etc)?
-fn random_in_unit_sphere<T: ElemT>() -> Vec3<T> {
+// TODO: put this somewhere else so metal can also use it
+pub fn random_in_unit_sphere<T: ElemT>() -> Vec3<T> {
     let mut rng = rand::thread_rng();
 
     let mut p;

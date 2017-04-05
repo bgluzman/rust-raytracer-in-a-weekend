@@ -4,16 +4,19 @@ use vec3::{ElemT, Vec3};
 use ray::Ray;
 use hitable::HitRecord;
 use material::Material;
+use lambertian::random_in_unit_sphere;
 
 #[derive(Clone)]
 pub struct Metal<T: ElemT> {
-    albedo: Vec3<T>
+    albedo: Vec3<T>,
+    fuzz: Option<T>
 }
 
 impl<T: ElemT> Metal<T> {
-    pub fn new(a: Vec3<T>) -> Metal<T> {
+    pub fn new(a: Vec3<T>, fuzz: T) -> Metal<T> {
         Metal::<T> {
-            albedo: a
+            albedo: a,
+            fuzz: if fuzz < T::one() && fuzz > T::zero() { Some(fuzz) } else { None }
         }
     }
 }
@@ -26,6 +29,7 @@ fn reflect<T: ElemT>(v: &Vec3<T>, n: &Vec3<T>) -> Vec3<T> {
 impl<T: ElemT> Material<T> for Metal<T> {
     fn scatter(&self, r_in: &Ray<T>, rec: &HitRecord<T>) -> Option<(Vec3<T>, Ray<T>)> {
         let reflected = reflect(&r_in.direction().unit_vector(), &rec.normal);
-        Some((self.albedo.clone(), Ray::new(rec.p.clone(), reflected)))
+        let (attenuation, scattered) = (self.albedo.clone(), Ray::new(rec.p.clone(), &reflected + &random_in_unit_sphere()*self.fuzz.unwrap_or(T::one())));
+        if scattered.direction().dot(&rec.normal) > T::zero() { Some((attenuation, scattered)) } else { None }
     }
 }
