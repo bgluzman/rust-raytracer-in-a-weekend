@@ -49,31 +49,61 @@ fn color(r: &Ray, world: &Hitable, depth: i32) -> Vec3 {
     }
 }
 
+fn random_scene() -> HitableList {
+    let mut rng = rand::thread_rng();
+
+    let mut list = Vec::<Box<Hitable>>::new();
+    list.push(Box::new(Sphere::new(Vec3::new(0., -1000., 0.), 1000., Box::new(Lambertian::new(Vec3::new(0.5, 0.5, 0.5))))));
+    for a in -11..12 { // TODO: better way to write inclusive?
+        for b in -11..12 {
+            let a = a as f64;
+            let b = b as f64;
+            let choose_mat = rng.next_f64();
+            let center = Vec3::new(a+0.9*rng.next_f64(), 0.2, b+0.9*rng.next_f64());
+            if (&center - Vec3::new(4., 0.2, 0.)).length() > 0.9 {
+                if choose_mat < 0.8 { // diffuse
+                    let r1 = rng.next_f64();
+                    let r2 = rng.next_f64();
+                    let r3 = rng.next_f64();
+                    let r4 = rng.next_f64();
+                    let r5 = rng.next_f64();
+                    let r6 = rng.next_f64();
+                    list.push(Box::new(Sphere::new(center, 0.2, Box::new(Lambertian::new(Vec3::new(r1*r2, r3*r4, r5*r6))))));
+                }
+                else if choose_mat < 0.95 { // metal
+                    let r1 = rng.next_f64();
+                    let r2 = rng.next_f64();
+                    let r3 = rng.next_f64();
+                    let r4 = rng.next_f64();
+                    list.push(Box::new(Sphere::new(center, 0.2, Box::new(Metal::new(Vec3::new(0.5*(1. + r1), 0.5*(1.+r2), 0.5*(1.+r3)), 0.5*r4)))));
+                }
+                else { // glass
+                    list.push(Box::new(Sphere::new(center, 0.2, Box::new(Dielectric::new(1.5)))));
+                }
+            }
+        }
+    }
+    list.push(Box::new(Sphere::new(Vec3::new(0., 1., 0.), 1., Box::new(Dielectric::new(1.5)))));
+    list.push(Box::new(Sphere::new(Vec3::new(-4., 1., 0.), 1., Box::new(Lambertian::new(Vec3::new(0.4, 0.2, 0.1)))))); 
+    list.push(Box::new(Sphere::new(Vec3::new(4., 1., 0.), 1., Box::new(Metal::new(Vec3::new(0.7, 0.6, 0.5), 0.))))); 
+
+    HitableList::new(list)
+}
+
 fn main() {
-	let nx = 200;
-	let ny = 100;
-    let ns = 100;
+	let nx = 1200;
+	let ny = 800;
+    let ns = 10;
 
     println!("P3\n {} {} \n255", nx, ny);
 
-    let list: Vec<Box<Hitable>> = vec![
-        Box::new(Sphere::new(Vec3::new(0., 0., -1.), 0.5, Box::new(Lambertian::new(Vec3::new(0.1, 0.2, 0.5))))),
-        Box::new(Sphere::new(Vec3::new(0., -100.5, -1.), 100., Box::new(Lambertian::new(Vec3::new(0.8, 0.8, 0.0))))),
-        Box::new(Sphere::new(Vec3::new(1., 0., -1.), 0.5, Box::new(Metal::new(Vec3::new(0.8, 0.6, 0.2), 0.)))),
-        Box::new(Sphere::new(Vec3::new(-1., 0., -1.), 0.5, Box::new(Dielectric::new(1.5)))),
-        Box::new(Sphere::new(Vec3::new(-1., 0., -1.), -0.45, Box::new(Dielectric::new(1.5))))
-    ];
-    // let R = (f64::consts::PI/4.).cos();
-    // let list: Vec<Box<Hitable>> = vec![
-    //     Box::new(Sphere::new(Vec3::new(-R,0.,-1.), R, Box::new(Lambertian::new(Vec3::new(0., 0., 1.))))),
-    //     Box::new(Sphere::new(Vec3::new( R,0.,-1.), R, Box::new(Lambertian::new(Vec3::new(1., 0., 0.)))))
-    // ];
-    let world = HitableList::new(list);
+    let world = random_scene();
 
-    let lookfrom = Vec3::new(3.,3.,2.);
-    let lookat = Vec3::new(0.,0.,-1.);
-    let dist_to_focus = (&lookfrom-&lookat).length();
-    let aperture = 2.;
+    let lookfrom = Vec3::new(13.,2.,3.);
+    let lookat = Vec3::new(0.,0.,0.);
+    // let dist_to_focus = (&lookfrom-&lookat).length();
+    let dist_to_focus = 10.;
+    let aperture = 0.1;
     let cam = Camera::new(lookfrom, lookat,
                           Vec3::new(0., 1., 0.),
                           20., (nx as f64) / (ny as f64),
