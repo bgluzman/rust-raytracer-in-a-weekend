@@ -70,10 +70,14 @@ fn main() {
     // ];
     let world = HitableList::new(list);
 
-    let cam = Camera::new(Vec3::new(-2., 2., 1.),
-                          Vec3::new(0., 0., -1.),
+    let lookfrom = Vec3::new(3.,3.,2.);
+    let lookat = Vec3::new(0.,0.,-1.);
+    let dist_to_focus = (&lookfrom-&lookat).length();
+    let aperture = 2.;
+    let cam = Camera::new(lookfrom, lookat,
                           Vec3::new(0., 1., 0.),
-                          15., (nx as f64) / (ny as f64));
+                          20., (nx as f64) / (ny as f64),
+                          aperture, dist_to_focus);
 
     let mut rng = rand::thread_rng();
     for j in (0..ny).rev() {
