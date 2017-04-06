@@ -19,10 +19,9 @@ mod dielectric;
 use std::f64;
 use rand::Rng;
 
-use camera::Camera;
-
 type Vec3 = vec3::Vec3<f64>;
 type Ray = ray::Ray<f64>;
+type Camera = camera::Camera<f64>;
 type Sphere = sphere::Sphere<f64>;
 type Hitable = hitable::Hitable<f64>;
 type HitableList = hitablelist::HitableList<f64>;
@@ -57,16 +56,21 @@ fn main() {
 
     println!("P3\n {} {} \n255", nx, ny);
 
+    // let list: Vec<Box<Hitable>> = vec![
+    //     Box::new(Sphere::new(Vec3::new(0., 0., -1.), 0.5, Box::new(Lambertian::new(Vec3::new(0.1, 0.2, 0.5))))),
+    //     Box::new(Sphere::new(Vec3::new(0., -100.5, -1.), 100., Box::new(Lambertian::new(Vec3::new(0.8, 0.8, 0.0))))),
+    //     Box::new(Sphere::new(Vec3::new(1., 0., -1.), 0.5, Box::new(Metal::new(Vec3::new(0.8, 0.6, 0.2), 0.)))),
+    //     Box::new(Sphere::new(Vec3::new(-1., 0., -1.), 0.5, Box::new(Dielectric::new(1.5)))),
+    //     Box::new(Sphere::new(Vec3::new(-1., 0., -1.), -0.45, Box::new(Dielectric::new(1.5))))
+    // ];
+    let R = (f64::consts::PI/4.).cos();
     let list: Vec<Box<Hitable>> = vec![
-        Box::new(Sphere::new(Vec3::new(0., 0., -1.), 0.5, Box::new(Lambertian::new(Vec3::new(0.1, 0.2, 0.5))))),
-        Box::new(Sphere::new(Vec3::new(0., -100.5, -1.), 100., Box::new(Lambertian::new(Vec3::new(0.8, 0.8, 0.0))))),
-        Box::new(Sphere::new(Vec3::new(1., 0., -1.), 0.5, Box::new(Metal::new(Vec3::new(0.8, 0.6, 0.2), 0.)))),
-        Box::new(Sphere::new(Vec3::new(-1., 0., -1.), 0.5, Box::new(Dielectric::new(1.5)))),
-        Box::new(Sphere::new(Vec3::new(-1., 0., -1.), -0.45, Box::new(Dielectric::new(1.5))))
+        Box::new(Sphere::new(Vec3::new(-R,0.,-1.), R, Box::new(Lambertian::new(Vec3::new(0., 0., 1.))))),
+        Box::new(Sphere::new(Vec3::new( R,0.,-1.), R, Box::new(Lambertian::new(Vec3::new(1., 0., 0.)))))
     ];
     let world = HitableList::new(list);
 
-    let cam = Camera::new();
+    let cam = Camera::new(90., (nx as f64) / (ny as f64));
 
     let mut rng = rand::thread_rng();
     for j in (0..ny).rev() {
